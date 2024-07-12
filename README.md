@@ -1,27 +1,71 @@
-# Singleton
+Singleton.ts
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.2.
 
-## Development server
+export class Singleton {
+private static instance: Singleton;
+private data!: string;
+private constructor() {
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+}
+public static getInstance() {
+if (!Singleton.instance) {
+Singleton.instance = new Singleton();
+}
+return Singleton.instance;
+}
 
-## Code scaffolding
+setData(message: string) {
+this.data = message;
+}
+getData(){
+return this.data;
+}
+}
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Creating one instance using singleton and using every components globally this instance.
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+App.component.html
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+<input type="text" [(ngModel)] = "data"/>
+<button (click)="sendData()">Send Data</button>
+<app-child></app-child>
+
+
+
+
+app.component.ts
+
+data : string = '';
+sendData(){
+Singleton.getInstance().setData(this.data);
+}
+
+
+
+Here ‘   Singleton.getInstance().setData("Bini");   ’  cretates a Singleton instnace using Singleton.getInstnace() and sets the value to Bini.
+
+
+
+
+
+
+Child.component.ts
+
+
+value: string = '';
+getInstnaceData(){
+this.value = Singleton.getInstance().getData();
+}
+
+
+
+Here in the child.ts file (   Singleton.getInstance().getData();  )  the Singleton.getInstance() will not create another instance since its the second call and the first call of creating instance is called in app.component.ts file ( where instance was created) . In child.ts it passes the reference of singleton created.
+
+
+Here singleton is acting as a bridge between transporting data from one class to another class. Singleton is acting as a global state. Singleton instance is only for a period of time because when we refresh the browser then the value is erased.
